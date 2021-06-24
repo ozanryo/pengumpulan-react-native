@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, StyleSheet, Button, Alert, Pressable, TouchableOpacity } from "react-native"
-import Login from "./page/login/login"
+import Login from "./src/page/login/login"
 
 class App extends Component {
   render(){

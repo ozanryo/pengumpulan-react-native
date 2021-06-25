@@ -39,7 +39,7 @@ class Home extends Component {
                 <ScrollView>
                     <View style={layouting.searchProvider}>
                         <Text style={layouting.searchProvText}>Search Provider : </Text>
-                        <TextInput style={layouting.textInput} placeholder="input phone number"/>
+                        <TextInput style={layouting.textInput} placeholder="input phone number" keyboardType="number-pad" />
                     </View>
                     <View style={layouting.tableList}>
                         {
@@ -81,7 +81,8 @@ const layouting = StyleSheet.create({
         paddingHorizontal: 10
     },
     searchProvText:{
-        fontSize: 15,
+        fontSize: 18,
+        fontWeight: "bold"
     },
     textInput: {
         width: "50%",

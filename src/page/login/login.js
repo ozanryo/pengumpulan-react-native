@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, Button, TextInput, StyleSheet, Alert, Pressable, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native"
-import { Button as ButtonElement } from "react-native-elements"
+import { Button as ButtonElement, Image} from "react-native-elements"
 
 class Login extends Component {
     constructor(props){
@@ -32,6 +32,14 @@ class Login extends Component {
         Alert.alert("Anda berhasil Login")
     }
 
+    sampleFacebookSubmit=()=>{
+        Alert.alert("Anda masuk ke laman facebook")
+    }
+
+    sampleGmailSubmit=()=>{
+        Alert.alert("Anda nmasuk ke laman gmail")
+    }
+
     sampleSignupSubmit=()=>{
         Alert.alert("Anda Masuk ke laman Signup")
     }
@@ -47,6 +55,25 @@ class Login extends Component {
                 <TouchableOpacity style={styles.button} onPress={() => this.sampleLoginSubmit()}>
                     <Text style={styles.btnText}>Login</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity style={styles.facebookButton} onPress={() => this.sampleFacebookSubmit()}>
+                    <Text style={styles.fbButtonText}>Login with Facebook</Text>
+                    <Image
+                    source={{uri: "https://clipartspub.com/images/facebook-logo-clipart-vector-8.png"}} 
+                    style={{width:50, height: 50, marginLeft: 15}}
+                    resizeMode="contain"
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.gmailButton} onPress={() => this.sampleGmailSubmit()}>
+                    <Text style={styles.gmailButtonText}>Login with Gmail</Text>
+                    <Image
+                    source={{uri: "https://clipartcraft.com/images/gmail-logo-svg.png"}} 
+                    style={{width:50, height: 50, marginLeft: 15}}
+                    resizeMode="contain"
+                    />
+                </TouchableOpacity>
+
                 <View style={styles.registrationDirection}>
                     <Text style={styles.registrationText}>Don't have an account ? </Text>
                     <TouchableOpacity onPress={()=> this.sampleSignupSubmit()}>
@@ -61,7 +88,6 @@ class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1, 
-        backgroundColor: '#e09200',
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "white"
@@ -92,12 +118,45 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "orange",
         marginVertical:10
-        
+    },
+    facebookButton: {
+        width: "80%",
+        height: 50,
+        borderRadius: 20,
+        borderColor: "#000061",
+        borderWidth:0.8,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+        marginVertical:10,
+        flexDirection: "row"
+    },
+    gmailButton: {
+        width: "80%",
+        height: 50,
+        borderRadius: 20,
+        borderColor: "red",
+        borderWidth:0.8,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+        marginVertical:10,
+        flexDirection: "row"
     },
     btnText: {
         fontSize: 20,
         fontWeight: "bold",
         color: "white"
+    },
+    fbButtonText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#000061"
+    },
+    gmailButtonText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "red"
     },
     registrationText: {
         fontSize: 15
@@ -111,9 +170,6 @@ const styles = StyleSheet.create({
     registrationDirection:{
         flexDirection: "row"
     }
-    
-
-
 });
   
 

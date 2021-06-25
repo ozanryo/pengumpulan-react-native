@@ -50,7 +50,7 @@ class Home extends Component {
                                     style={{ width: 150, height: 75 }} 
                                     resizeMode="contain"/>
                                     <View style={layouting.tableRowDetails}>
-                                        <Text style={layouting.productName}>{product.name}</Text>
+                                        {/* <Text style={layouting.productName}>{product.name}</Text> */}
                                         <TouchableOpacity style={layouting.detailsBtn} onPress={()=>this.onClickDetails(index)}>
                                             <Text style={layouting.detailsText}>Details</Text>
                                         </TouchableOpacity>

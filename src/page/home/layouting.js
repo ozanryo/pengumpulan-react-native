@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, ScrollView, Alert } from "react-native"
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, ScrollView, Alert, ToastAndroid } from "react-native"
 import {ListItem, Image, Button} from "react-native-elements"
+import Icon from "react-native-vector-icons/Ionicons"
 
 export default class Layouting extends Component {
     constructor(props){
@@ -11,73 +12,137 @@ export default class Layouting extends Component {
             pekerjaan: "",
             hobi: "",
             domisili: "",
-            listName: [
-                {
-                    name: "Ardi",
-                    umur: 20,
-                    pekerjaan: "Programmer",
-                    hobi: "Game",
-                    domisili: "Jakarta"
-                },
-                {
-                    name: "Budi",
-                    domisili: "Jakarta",
-                    umur: 21,
-                    pekerjaan: "Accountant",
-                    hobi: "Sepak Bola",
-                    domisili: "Bandung"
-                }
-            ]
+            listName: [], 
+            editIndex: 0,
+            finishAdd: false,
+            finishEdit: false,
+            cancel: false
         }
     }
 
-    // onChangeFunction=(text)=>{
-    //     this.setState({name: text})
-    // }
-
-    // onChangeAge=(text)=>{
-    //     this.setState({umur: parseInt(text)})
-    // }
-
-    // onChangeJob=(text)=>{
-    //     this.setState({pekerjaan: text})
-    // }
-
-    // onChangeHobby=(text)=>{
-    //     this.setState({hobi: text})
-    // }
-
-    // onChangeDom=(text)=>{
-    //     this.setState({domisili: text})
-    // }
-
-    addValue(){
-        const newList = this.state.listName;
-
-        const newData = {
-            name: this.state.name,
-            umur: this.state.umur,
-            pekerjaan: this.state.pekerjaan,
-            hobi: this.state.hobi,
-            domisili: this.state.domisili
-        }
-
-        newList.push(newData)
-
-        this.setState({ listName: newList})
-
-        Alert.alert(
-            "Selamat Datang, Nama : " + this.state.name + 
-            "\nUsia : " + this.state.umur + 
-            "\nPekerjaan : " + this.state.pekerjaan + 
-            "\nHobi : " + this.state.hobi + 
-            "\nDomisili : " + this.state.domisili 
+    componentDidMount(){
+        console.log("compDidMount")
+        this.setState(
+            {
+                listName: this.props.peoples, 
+                finishAdd: false, 
+                cancel: false,
+                finishEdit: false
+            }
         )
     }
+
+    componentDidUpdate(prevProps, prevState){
+        console.log("PrevProps : ",prevProps)
+        console.log("PrevState : ", prevState.cancel)
+        if(this.state.finishAdd != prevState.finishAdd || this.state.finishEdit != prevState.finishEdit || this.state.cancel != prevState.cancel){
+            this.setState({
+                name: "",
+                umur: "",
+                pekerjaan: "",
+                hobi: "",
+                domisili: ""
+            })
+        }
+    }
+
+    addValue(){
+        if(this.state.name == "" || this.state.umur == 0 || this. state.pekerjaan == "" || this.state.hobi =="" || this.state.domisili == "" ){
+            ToastAndroid.show("Data harus dilengkapi", ToastAndroid.SHORT)
+        } else {
+            const newList = this.props.peoples;
+
+            const newData = {
+                name: this.state.name,
+                umur: this.state.umur,
+                pekerjaan: this.state.pekerjaan,
+                hobi: this.state.hobi,
+                domisili: this.state.domisili
+            }
+
+            newList.push(newData)
+
+            this.setState({ listName: newList, finishAdd: true})
+
+            ToastAndroid.show("Data ditambahkan", ToastAndroid.SHORT)
+        }
+    }
+
+    editValue(id){
+        this.props.onEdit()
+        console.log(this.props.peoples[id].umur)
+        console.log(id)
+
+        const editData = this.props.peoples[id];
+
+        this.setState({
+            editIndex: id,
+            name: editData.name,
+            umur: editData.umur,
+            pekerjaan: editData.pekerjaan,
+            hobi: editData.hobi,
+            domisili: editData.domisili
+        })
+
+        
+
+    }
+
+    saveNewData(inputName, inputAge, inputJob, inputHobby, inputDom){
+        const listData = this.props.peoples
+
+        const newData = {
+            name: inputName,
+            umur: inputAge,
+            pekerjaan: inputJob,
+            hobi: inputHobby,
+            domisili: inputDom
+        }
+
+        listData.splice(this.state.editIndex, 1, newData)
+        this.setState({listName: listData})
+    }
+
+    saveButton(){
+        this.saveNewData(
+            this.state.name,
+            this.state.umur,
+            this.state.pekerjaan,
+            this.state.hobi,
+            this.state.domisili
+        )
+
+        this.props.finishEdit()
+
+        // this.setState({
+        //     editIndex: 0,
+        //     name: "",
+        //     umur: "",
+        //     pekerjaan: "",
+        //     hobi: "",
+        //     domisili: ""
+        // })
+
+        this.setState({finishEdit: true})
+    }
+
+    batalEdit(){
+        this.props.editCancel()
+
+        if(this.state.cancel == false){
+            this.setState({cancel: true})
+        } else {
+            this.setState({cancel: false})
+        }
+    }
+
+
     render(){
         return(
             <View style={layouting.main}>
-                <View style={layouting.container1}><Text style={layouting.textInfo}>Registrasi User</Text></View>
+                {/* <View style={layouting.container1}>
+                    <Text style={layouting.textInfo}>Registrasi User</Text>
+                </View> */}
 
                 <View style={layouting.containter3}>
                     <View style={layouting.containter4}>
@@ -127,11 +192,24 @@ export default class Layouting extends Component {
                         onChangeText={(domisili)=>this.setState({domisili})}/>
                     </View>
 
-                    <View>
-                        <TouchableOpacity style={layouting.button} onPress={()=>this.addValue()}>
-                            <Text style={layouting.textCon3}>Tambah</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {
+                        !this.props.editStat ? 
+                        <View style={layouting.buttonPosition}>
+                            <TouchableOpacity style={layouting.button} onPress={()=>this.addValue()}>
+                                <Text style={layouting.btnText}>Tambah</Text>
+                            </TouchableOpacity>
+                        </View>
+                        :
+                        <View style={layouting.buttonPosition}>
+                            <TouchableOpacity style={layouting.saveButton} onPress={()=>this.saveButton()}>
+                                <Text style={layouting.btnText}>Simpan</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={layouting.cancelButton} onPress={()=>this.batalEdit()}>
+                                <Text style={layouting.btnText}>Batal</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }
                     
                     <View style={layouting.listTable}>
                         <FlatList 
@@ -143,6 +221,24 @@ export default class Layouting extends Component {
                                 <Text style={layouting.tableData}>{item.pekerjaan}</Text>
                                 <Text style={layouting.tableData}>{item.hobi}</Text>
                                 <Text style={layouting.tableData}>{item.domisili}</Text>
+                                <View style={layouting.buttonUtil}>
+                                    <TouchableOpacity style={layouting.editButton} onPress={()=>this.editValue(index)}>
+                                        <Icon 
+                                            name="create-outline"
+                                            size={40}
+                                            color="blue"
+                                            
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={layouting.deleteButton} onPress={()=>this.props.onDelete(index)}>
+                                        <Icon 
+                                            name="trash-outline"
+                                            size={40}
+                                            color="red"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                
                             </View>)
                         }
                         showsVerticalScrollIndicator={true}
@@ -176,30 +272,60 @@ const layouting = StyleSheet.create({
         alignItems: "center",
         justifyContent:"center",
         flexDirection: "column",
-        flex: 9,
+        flex: 1,
         backgroundColor: "white"
     },
     containter4: {
         alignItems: "center",
         justifyContent:"center",
         flexDirection: "row",
-        flex: 1,
+        // flex: 1,
         backgroundColor: "white",
         marginVertical: 20
+    },
+    buttonPosition:{
+        flexDirection: "row"
+    },
+    btnText:{
+        fontSize: 15,
+        color: "white",
+        fontWeight: "bold"
     },
     button:{
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "orange",
-        width: 120,
+        width: 90,
         height: 70,
         borderRadius: 20,
-        marginVertical: 10
+        marginVertical: 10,
+        marginHorizontal: 10,
+        backgroundColor: "green"
+    },
+    saveButton:{
+        alignItems: "center",
+        justifyContent: "center",
+        width: 90,
+        height: 70,
+        borderRadius: 20,
+        marginVertical: 10,
+        marginHorizontal: 10,
+        backgroundColor: "blue"
+    },
+    cancelButton:{
+        alignItems: "center",
+        justifyContent: "center",
+        width: 90,
+        height: 70,
+        borderRadius: 20,
+        marginVertical: 10,
+        marginHorizontal: 10,
+        backgroundColor: "red"
     },
     listTable:{
-        flex: 5,
+        flex: 2,
         color: "black",
-        flexDirection: "column"
+        flexDirection: "column",
+        width: "80%",
     },
     tableRow:{
         backgroundColor: "white",
@@ -207,10 +333,13 @@ const layouting = StyleSheet.create({
         marginBottom: 10, 
         borderColor: 'grey', 
         borderBottomWidth: 0.5,
-        flexDirection: "row"
+        flexDirection: "column",
     },
     tableData:{
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        marginVertical: 5,
+        textAlign: "center",
+        fontSize: 20
     },
     textInfo: {
         fontSize: 20,
@@ -232,4 +361,19 @@ const layouting = StyleSheet.create({
         marginHorizontal: 10,
         color: "black"
     },
+    buttonUtil: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    editButton: {
+        marginHorizontal: 15,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    deleteButton: {
+        marginHorizontal: 15,
+        justifyContent: "center",
+        alignItems: "center",
+    }
 })

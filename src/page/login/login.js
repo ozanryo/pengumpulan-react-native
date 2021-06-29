@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
-import { View, Text, Button, TextInput, StyleSheet, Alert, TouchableOpacity, ScrollView } from "react-native"
-import { Button as ButtonElement, Image, Icon, ListItem} from "react-native-elements"
+import { View, Text, Button, TextInput, StyleSheet, Alert, TouchableOpacity, ScrollView, ToastAndroid } from "react-native"
+import { Button as ButtonElement, Image, ListItem} from "react-native-elements"
+import Home from "../home/home"
+import Icon from "react-native-vector-icons/Ionicons"
+
 
 class Login extends Component {
     constructor(props){
@@ -18,45 +21,29 @@ class Login extends Component {
                     password: "Staff"
                 }
             ],
-            checkUser: [],
-            listProduct: [
-                {
-                    name: "Indosat",
-                    imageUrl: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c0/Indosat_Ooredoo_logo.svg/1200px-Indosat_Ooredoo_logo.svg.png"
-                }, {
-                    name: "Telkomsel",
-                    imageUrl: "https://cyberhostnet.com/wp-content/uploads/TELKOMSEL.png"
-                }, {
-                    name: "XL",
-                    imageUrl: "https://upload.wikimedia.org/wikipedia/en/thumb/5/55/XL_logo_2016.svg/1200px-XL_logo_2016.svg.png"
-                }, {
-                    name: "Axis",
-                    imageUrl: "https://3.bp.blogspot.com/-duXJs4wTS9s/WfsyPVPVs0I/AAAAAAAAAIg/O48WVTHrHgMWogUjll5J6BFwFS4PoGGhgCLcBGAs/s1600/Logo_axis_new.png"
-                }, {
-                    name: "Flexi",
-                    imageUrl: "https://upload.wikimedia.org/wikipedia/en/c/c9/Flexi_Logo_2014.png"
-                }, {
-                    name: "IM3",
-                    imageUrl: "http://3.bp.blogspot.com/-ggCD4CenT7Q/UiepiyVXnpI/AAAAAAAAABo/JCNo7gLei0o/s1600/eka.png"
-                }
-            ]
+            dataSecureEntry: true
         }
     }
 
     
 
     sampleLoginSubmit=()=>{
-        for(let index=0; index < this.state.listUser.length; index++){
-            const checkUser = this.state.listUser[index];
-            if (checkUser.username.includes(this.state.username)){
-                if(checkUser.password.includes(this.state.password)){
-                    Alert.alert("Selamat Datang")
-                    this.setState({loginState: true})
-                } else{
-                    Alert.alert("Password anda salah")
+        if(this.state.username == "" || this.state.password == ""){
+            ToastAndroid.show("Masukkan Username dan Password", ToastAndroid.SHORT)
+        } else {
+            for(let index=0; index < this.state.listUser.length; index++){
+                const checkUser = this.state.listUser[index];
+                if (checkUser.username.includes(this.state.username)){
+                    if(checkUser.password.includes(this.state.password)){
+                        ToastAndroid.show("Selamat Datang", ToastAndroid.SHORT)
+                        this.setState({loginState: true})
+                    } else{
+                        ToastAndroid.show("Password anda salah", ToastAndroid.SHORT)
+                    }
                 }
             }
         }
+        
 
         // const searchUser = this.state.listUser.filter(user=> {
         //     user.username.includes(this.state.username);
@@ -77,35 +64,18 @@ class Login extends Component {
         Alert.alert("Anda Masuk ke laman Signup")
     }
 
+    showPassword(){
+        if(this.state.dataSecureEntry == false){
+            this.setState({dataSecureEntry: true})
+        } else {
+            this.setState({dataSecureEntry: false})
+        }
+    }
+
     render(){
         if(this.state.loginState != false){
             return(
-                <View style={layouting.main}>
-                <ScrollView>
-                    <View style={layouting.searchProvider}>
-                        <Text style={layouting.searchProvText}>Search Provider : </Text>
-                        <TextInput style={layouting.textInput} placeholder="input phone number" keyboardType="number-pad" />
-                    </View>
-                    <View style={layouting.tableList}>
-                        {
-                            this.state.listProduct.map((product, index)=>(
-                                <ListItem key={index} style={layouting.tableRow}>
-                                    <Image 
-                                    source={{uri: product.imageUrl}} 
-                                    style={{ width: 150, height: 75 }} 
-                                    resizeMode="contain"/>
-                                    <View style={layouting.tableRowDetails}>
-                                        {/* <Text style={layouting.productName}>{product.name}</Text> */}
-                                        <TouchableOpacity style={layouting.detailsBtn} onPress={()=>this.onClickDetails(index)}>
-                                            <Text style={layouting.detailsText}>Details</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </ListItem>
-                            ))
-                        }
-                    </View>
-                </ScrollView>
-            </View>
+                <Home />
             )
         }
         return(
@@ -114,47 +84,78 @@ class Login extends Component {
 
                 <Text style={styles.fontStyle}>Username</Text>
 
-                <TextInput 
-                style={styles.textInput} 
-                placeholder="input username" 
-                onChangeText={(username)=>this.setState({username})}
-                value={this.state.username}
-                />
+                <View style={styles.textInput} >
+                    <Icon 
+                    style={{padding: 7, alignItems:"center", justifyContent:"center"}}
+                    name="person-circle-outline"
+                    color="#ccc"
+                    size={30}
+                    />
+
+                    <TextInput 
+                    style={styles.inputForm} 
+                    placeholder="input username" 
+                    onChangeText={(username)=>this.setState({username})}
+                    value={this.state.username}
+                    />
+
+                </View>
 
                 <Text style={styles.fontStyle}>Password</Text>
 
-                <TextInput 
-                style={styles.textInput} 
-                placeholder="input password" 
-                secureTextEntry={true} 
-                onChangeText={(password)=>this.setState({password})}
-                value={this.state.password}
-                />
-                
+                <View style={styles.textInput}>
+                    <Icon 
+                    style={{padding: 7, alignItems:"center", justifyContent:"center"}}
+                    name="lock-closed-outline"
+                    color="#ccc"
+                    size={30}
+                    />
+                    <TextInput 
+                    style={styles.inputForm} 
+                    placeholder="input password" 
+                    secureTextEntry={this.state.dataSecureEntry} 
+                    onChangeText={(password)=>this.setState({password})}
+                    value={this.state.password}
+                    />
+                    <TouchableOpacity style={{padding: 7, alignItems:"center", justifyContent:"center"}} onPress={()=>this.showPassword()}>
+                        {
+                            this.state.dataSecureEntry ? 
+                            <Icon 
+                                name="eye-outline"
+                                color="#ccc"
+                                size={30}
+                            />
+                            :
+                            <Icon 
+                                name="eye-off-outline"
+                                color="#ccc"
+                                size={35}
+                            />
+                        }
+                    </TouchableOpacity>
+                </View>
+
                 <TouchableOpacity style={styles.button} onPress={() => this.sampleLoginSubmit()}>
                     <Text style={styles.btnText}>Login</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.facebookButton} onPress={() => this.sampleFacebookSubmit()}>
                     <Text style={styles.fbButtonText}>Login with Facebook</Text>
-                    <Image
-                    source={{uri: "https://clipartspub.com/images/facebook-logo-clipart-vector-8.png"}} 
-                    style={{width:50, height: 50, marginLeft: 15}}
-                    resizeMode="contain"
+                    <Icon 
+                        name="logo-facebook"
+                        color="white"
+                        size={30}
+                        style={{padding: 7, alignItems:"flex-end", justifyContent:"flex-end"}}
                     />
-                    {/* <Icon 
-                    name=''
-                    type="evilicon"
-                    color="#000061"
-                    /> */}
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.gmailButton} onPress={() => this.sampleGmailSubmit()}>
                     <Text style={styles.gmailButtonText}>Login with Gmail</Text>
-                    <Image
-                    source={{uri: "https://clipartcraft.com/images/gmail-logo-svg.png"}} 
-                    style={{width:50, height: 50, marginLeft: 15}}
-                    resizeMode="contain"
+                    <Icon 
+                        name="logo-google"
+                        color="white"
+                        size={30}
+                        style={{padding: 7, alignItems:"flex-end", justifyContent:"flex-end"}}
                     />
                 </TouchableOpacity>
 
@@ -192,7 +193,12 @@ const styles = StyleSheet.create({
         borderWidth: 0.8,
         borderRadius: 20,
         paddingHorizontal: 15,
-        marginVertical: 10
+        marginVertical: 10,
+        flexDirection: "row"
+    },
+    inputForm: {
+        width: "72%",
+        height: 50,
     },
     button: {
         width: "80%",
@@ -211,7 +217,7 @@ const styles = StyleSheet.create({
         borderWidth:0.8,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "white",
+        backgroundColor: "#000061",
         marginVertical:10,
         flexDirection: "row"
     },
@@ -223,7 +229,7 @@ const styles = StyleSheet.create({
         borderWidth:0.8,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "white",
+        backgroundColor: "red",
         marginVertical:10,
         flexDirection: "row"
     },
@@ -235,12 +241,12 @@ const styles = StyleSheet.create({
     fbButtonText: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "#000061"
+        color: "white"
     },
     gmailButtonText: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "red"
+        color: "white"
     },
     registrationText: {
         fontSize: 15
@@ -255,68 +261,6 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     }
 });
-
-const layouting = StyleSheet.create({
-    main: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "white"
-    },
-    searchProvider: {
-        flex: 1,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        marginVertical: 10,
-        paddingHorizontal: 10
-    },
-    searchProvText:{
-        fontSize: 18,
-        fontWeight: "bold"
-    },
-    textInput: {
-        width: "50%",
-        height: 40,
-        borderColor: "grey",
-        borderWidth: 0.5,
-        borderRadius: 20,
-        paddingHorizontal: 15,
-        marginHorizontal: 10
-    },
-    nameFilter: {
-        borderColor: "grey",
-        borderWidth: 0.5,
-    }, 
-    tableList: {
-        flex: 4
-    },
-    tableRow:{
-        padding: 10
-    },
-    tableRowDetails: {
-        flexDirection: "column",
-        marginLeft: 20,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    productName: {
-        fontSize:20,
-        marginVertical: 10,
-    },
-    detailsBtn:{
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "orange",
-        width: 80,
-        height: 40,
-        borderRadius: 20
-    },
-    detailsText:{
-        fontSize: 15,
-        color: "white"
-    }
-})
   
 
 export default Login;

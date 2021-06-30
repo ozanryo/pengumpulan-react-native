@@ -64,6 +64,10 @@ export default class Layouting extends Component {
 
             this.setState({ listName: newList, finishAdd: true})
 
+            if(this.state.finishAdd == false){
+                this.setState({finishAdd: false})
+            }
+
             ToastAndroid.show("Data ditambahkan", ToastAndroid.SHORT)
         }
     }
@@ -100,6 +104,8 @@ export default class Layouting extends Component {
         }
 
         listData.splice(this.state.editIndex, 1, newData)
+
+        
         this.setState({listName: listData})
     }
 
@@ -123,7 +129,11 @@ export default class Layouting extends Component {
         //     domisili: ""
         // })
 
-        this.setState({finishEdit: true})
+        if(this.state.finishEdit == false){
+            this.setState({finishEdit: true})
+        } else {
+            this.setState({finishEdit: false})
+        }    
     }
 
     batalEdit(){
@@ -226,19 +236,17 @@ export default class Layouting extends Component {
                                         <Icon 
                                             name="create-outline"
                                             size={40}
-                                            color="blue"
-                                            
+                                            color="white"
                                         />
                                     </TouchableOpacity>
                                     <TouchableOpacity style={layouting.deleteButton} onPress={()=>this.props.onDelete(index)}>
                                         <Icon 
                                             name="trash-outline"
                                             size={40}
-                                            color="red"
+                                            color="white"
                                         />
                                     </TouchableOpacity>
-                                </View>
-                                
+                                </View> 
                             </View>)
                         }
                         showsVerticalScrollIndicator={true}
@@ -364,16 +372,25 @@ const layouting = StyleSheet.create({
     buttonUtil: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        marginVertical: 15
     },
     editButton: {
         marginHorizontal: 15,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        backgroundColor: "blue",
+        borderRadius: 20,
+        width: "30%",
+        height: 60
     },
     deleteButton: {
         marginHorizontal: 15,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "red",
+        borderRadius: 20,
+        width: "30%",
+        height: 60
     }
 })

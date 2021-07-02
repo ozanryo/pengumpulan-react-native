@@ -65,6 +65,13 @@ class Networking2 extends Component {
                 .then((ResponseJson)=>{
                     console.log("Data :", ResponseJson)
                     this.getData();
+                    this.setState({
+                        nama: "",
+                        nip: "",
+                        alamat: "",
+                        jabatan: "",
+                        masker: ""
+                    })
                 })
                 .catch((error)=>{
                     console.log("Error :", error)
@@ -164,7 +171,25 @@ class Networking2 extends Component {
     }
 
     deletePegawai(index){
-        Alert.alert("Anda akan menghapus data " + this.state.details.nama)
+        this.setState({detailsInfo: false})
+        const optionFetch = {
+            method: "DELETE",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        }
+        return fetch('http://207.148.121.63/api/employee/'+ index, optionFetch)
+                .then((response)=>response.json())
+                .then((ResponseJson)=>{
+                    console.log("Data :", ResponseJson)
+                    this.getData();
+                    ToastAndroid.show("Data sudah dihapus", ToastAndroid.SHORT)
+                })
+                .catch((error)=>{
+                    console.log("Error :", error)
+                })
+
     }
 
     render(){

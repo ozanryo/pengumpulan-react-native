@@ -5,5 +5,6 @@ import Layouting from "./home/layouting";
 import Profile from "./profile/profile"
 import Lifecycle from "./home/lifecycle"; 
 import Networking from "./home/networking"
+import Networking2 from "./home/netoworking2"
 
-export {Login, Home, Signup, Layouting, Profile, Lifecycle, Networking};
+export {Login, Home, Signup, Layouting, Profile, Lifecycle, Networking, Networking2};

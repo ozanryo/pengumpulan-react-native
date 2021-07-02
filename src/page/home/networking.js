@@ -93,7 +93,6 @@ class Networking extends Component {
                                             <Text style={layouting.detailsBtnText}>Details</Text>
                                         </TouchableOpacity>
                                     </View>
-                                    
                                 }
                             </View>
                         </View>

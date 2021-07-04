@@ -3,4 +3,4 @@ Pengumpulan React Native
 
 
 ### Tugas Day 51
-![alt text](https://github.com/ozanryo/pengumpulan-react-native/blob/main/20210702_131856.gif =100x20?raw=true)
+![alt text](https://github.com/ozanryo/pengumpulan-react-native/blob/main/20210702_131856.gif =100x20)

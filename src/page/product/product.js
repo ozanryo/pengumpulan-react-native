@@ -55,7 +55,7 @@ export default class Product extends Component {
                                         {/* <Text style={layouting.productName}>{product.name}</Text> */}
                                         <TouchableOpacity 
                                             style={layouting.detailsBtn} 
-                                            onPress={()=>this.props.navigation.navigate('Product')}
+                                            onPress={()=>this.onClickDetails(index)}
                                         >
                                             <Text style={layouting.detailsText}>Details</Text>
                                         </TouchableOpacity>
@@ -94,7 +94,7 @@ const layouting = StyleSheet.create({
     textInput: {
         width: "50%",
         height: 40,
-        borderColor: "grey",
+        borderColor: "#FF6F00",
         borderWidth: 0.5,
         borderRadius: 20,
         paddingHorizontal: 15,
@@ -106,10 +106,14 @@ const layouting = StyleSheet.create({
     }, 
     tableList: {
         flex: 4,
-        alignItems: "center"
+        alignItems: "center",
+        // width: '80%'
     },
     tableRow:{
-        padding: 10
+        padding: 10,
+        borderBottomWidth: 0.7,
+        borderBottomColor: '#FF6F00',
+        width: "90%"
     },
     tableRowDetails: {
         flexDirection: "column",

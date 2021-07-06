@@ -17,7 +17,7 @@ class Home extends Component {
     render(){
         return(
             <View style={layouting.main}>
-                
+                <Text>Ini Page Home</Text>
             </View>
         )
     }

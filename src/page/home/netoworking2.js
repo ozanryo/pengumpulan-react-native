@@ -192,6 +192,10 @@ class Networking2 extends Component {
 
     }
 
+    componentDidUpdate(prevProps, prevStates){
+
+    }
+
     render(){
         // console.log("Data:", this.state.data.nama)
         return(

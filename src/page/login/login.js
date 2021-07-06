@@ -36,7 +36,8 @@ class Login extends Component {
                 if (checkUser.username.includes(this.state.username)){
                     if(checkUser.password.includes(this.state.password)){
                         ToastAndroid.show("Selamat Datang", ToastAndroid.SHORT)
-                        this.setState({loginState: true})
+                        this.setState({loginState: true, username:"", password:""})
+                        this.props.navigation.navigate('Home')
                     } else{
                         ToastAndroid.show("Password anda salah", ToastAndroid.SHORT)
                     }
@@ -73,16 +74,16 @@ class Login extends Component {
     }
 
     render(){
-        if(this.state.loginState != false){
-            return(
-                <Home />
-            )
-        }
+        // if(this.state.loginState != false){
+        //     return(
+        //         <Home />
+        //     )
+        // }
         return(
             <View style={styles.container} >
-                <Text style={styles.title}>Login Now</Text>
+                <Text style={styles.title}>Login</Text>
 
-                <Text style={styles.fontStyle}>Username</Text>
+                {/* <Text style={styles.fontStyle}>Username</Text> */}
 
                 <View style={styles.textInput} >
                     <Icon 
@@ -101,7 +102,7 @@ class Login extends Component {
 
                 </View>
 
-                <Text style={styles.fontStyle}>Password</Text>
+                {/* <Text style={styles.fontStyle}>Password</Text> */}
 
                 <View style={styles.textInput}>
                     <Icon 
@@ -161,7 +162,7 @@ class Login extends Component {
 
                 <View style={styles.registrationDirection}>
                     <Text style={styles.registrationText}>Don't have an account ? </Text>
-                    <TouchableOpacity onPress={()=> this.sampleSignupSubmit()}>
+                    <TouchableOpacity onPress={()=> this.props.navigation.navigate('Signup')}>
                         <Text style={styles.registrationLink}>Register Now</Text>
                     </TouchableOpacity>
                 </View>
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     }, 
     title: {
-        fontSize: 30,
+        fontSize: 60,
         fontWeight:'bold',
         marginBottom: 20
     }, 

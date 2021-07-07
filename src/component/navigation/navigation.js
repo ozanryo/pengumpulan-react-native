@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { View, Text } from 'react-native';
-import {Home, Profile, Product, Login, Signup, History} from "../../page"
+import {Home, Profile, Product, Login, Signup, History, History2, Swipe} from "../../page"
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -61,7 +61,7 @@ export default function Navigator(){
                         </View>
                     )
                 }} />
-                <Tab.Screen name="History" component={History} options={{
+                <Tab.Screen name="History" component={History2} options={{
                     tabBarIcon: ({focused}) => (
                         <View style={styling.tabs}>
                             <Icon name='receipt' color={focused ? "#FF6F00" : "#363535"} size={30} />
@@ -77,6 +77,14 @@ export default function Navigator(){
                         </View>
                     )
                 }} />
+                {/* <Tab.Screen name="Swipe" component={Swipe} options={{
+                    tabBarIcon: ({focused}) => (
+                        <View style={styling.tabs}>
+                            <Icon name='person' color={focused ? "#FF6F00" : "#363535"} size={30} />
+                            <Text style={{color: focused ? "#FF6F00" : "#363535", fontSize: 12}} >SWIPE</Text>
+                        </View>
+                    )
+                }} /> */}
             </Tab.Navigator>
         </NavigationContainer>
     )

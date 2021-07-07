@@ -23,6 +23,10 @@ class Profile extends Component {
         this.setState({editProfileStat: true})
     }
 
+    logoutProfile(){
+        ToastAndroid.show("Keluar Aplikasi", ToastAndroid.SHORT)
+    }
+
     render(){
         return(
             <ScrollView contentContainerStyle={styles.main} >
@@ -44,7 +48,7 @@ class Profile extends Component {
                             icon={{name:'person', type:'Ionicons', size: 200}}
                             onPress={() => console.log("Works!")}
                             activeOpacity={0.7}
-                            overlayContainerStyle={{backgroundColor:'#90A4AE'}}
+                            overlayContainerStyle={{backgroundColor:'#E0E0E0'}}
                         />
                     }
                 </View>
@@ -59,7 +63,7 @@ class Profile extends Component {
                             <Icon name='create' color='white' size={30}/>
                             <Text style={styles.btnText}>Edit Profile</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.logoutBtn} onPress={() => this.beginEditProfile()}>
+                        <TouchableOpacity style={styles.logoutBtn} onPress={() => this.logoutProfile()}>
                             <Icon name='exit' color='white' size={30}/>
                             <Text style={styles.btnText}>Logout</Text>
                         </TouchableOpacity>
@@ -83,13 +87,13 @@ const styles=StyleSheet.create({
         marginBottom: 15
     },
     profileLayout:{
-        marginBottom: 20,
+        marginBottom: 5,
         width: "80%"
     },
     textProfile:{
         fontSize: 28,
-        fontWeight: "900",
-        color: "black",
+        fontWeight: "bold",
+        color: "#EF6C00",
         marginVertical: 10
     },
     button:{

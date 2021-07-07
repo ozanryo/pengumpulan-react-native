@@ -8,5 +8,7 @@ import Product from "./product/product";
 import Networking from "./home/networking";
 import Networking2 from "./home/netoworking2";
 import History from "./history/history";
+import History2 from "./history/history2";
+import Swipe from "./home/pageSwipe"
 
-export {Login, Home, Signup, Layouting, Profile, Product, History, Lifecycle, Networking, Networking2};
+export {Login, Home, Signup, Layouting, Profile, Product, History, History2, Lifecycle, Networking, Networking2};

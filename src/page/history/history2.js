@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, ToastAndroi
 import Icon from "react-native-vector-icons/Ionicons"
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 
-export default class History extends Component {
+export default class History2 extends Component {
     constructor(props){
         super(props);
         this.state={
@@ -104,7 +104,7 @@ export default class History extends Component {
     }
 
     cancelButton(){
-        this.setState({deleteInfo: false})
+        this.setState({deleteInfo: false, detailsInfo: false})
     }
 
     /** Latihan */
@@ -198,9 +198,22 @@ export default class History extends Component {
                         <Modal
                             animationType='slide'
                             transparent={true}
-                            visible={this.state.deleteInfo}
+                            visible={this.state.detailsInfo}
                         >
-                            
+                           <View style={styles.detailsModalLayout}>
+                               <View style={styles.detailsLayout}>
+                                   <View style={{marginHorizontal: 20, marginVertical: 20}}>
+                                        <Text style={{fontWeight: "700", fontSize: 20, color:"black"}}>Nama Pegawai : <Text style={{fontWeight: "200"}}>{this.state.detailsSampleData.nama}</Text></Text>
+                                        <Text style={{fontWeight: "700", fontSize: 20, color:"black"}}>NIP : <Text style={{fontWeight: "200"}}>{this.state.detailsSampleData.nip}</Text></Text>
+                                        <Text style={{fontWeight: "700", fontSize: 20, color:"black"}}>Alamat : <Text style={{fontWeight: "200"}}>{this.state.detailsSampleData.alamat}</Text></Text>
+                                        <Text style={{fontWeight: "700", fontSize: 20, color:"black"}}>Jabatan : <Text style={{fontWeight: "200"}}>{this.state.detailsSampleData.jabatan}</Text></Text>
+                                        <Text style={{fontWeight: "700", fontSize: 20, color:"black"}}>Masa Kerja : <Text style={{fontWeight: "200"}}>{this.state.detailsSampleData.masa_kerja}</Text></Text>
+                                   </View>
+                                   <TouchableOpacity style={styles.noButton} onPress={()=>this.cancelButton()}>
+                                        <Text style={styles.deleteBtnText} >Keluar</Text>
+                                    </TouchableOpacity>
+                               </View>
+                            </View> 
                         </Modal>
                     </View>
                     :
@@ -302,5 +315,21 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: 'white',
         paddingHorizontal:5
+    },
+    detailsModalLayout: {
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor:"rgba(1,1,1,0.8)",
+        flex: 1
+    },
+    detailsLayout:{
+        flexDirection: "column",
+        paddingVertical: 15,
+        marginHorizontal: 5,
+        width: "75%",
+        justifyContent:"center",
+        alignItems: "center",
+        backgroundColor: "white",
+        borderRadius: 15
     }
 })

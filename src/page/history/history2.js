@@ -34,7 +34,7 @@ export default class History2 extends Component {
             detailsSampleData: []
         }
     }
-    /** Latihan */
+    /** Latihan, Screen Capture ada di branch main readme.md */
 
     componentDidMount(){
         this.getData()

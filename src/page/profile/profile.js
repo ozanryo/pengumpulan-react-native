@@ -100,7 +100,7 @@ const styles=StyleSheet.create({
         alignItems: 'center'
     },
     editBtn:{
-        backgroundColor: 'blue',
+        backgroundColor: '#31BDC2',
         alignItems: 'center',
         justifyContent: 'center',
         width: "90%",
@@ -110,7 +110,7 @@ const styles=StyleSheet.create({
         flexDirection: 'row'
     },
     logoutBtn:{
-        backgroundColor: 'red',
+        backgroundColor: '#E90F24',
         alignItems: 'center',
         justifyContent: 'center',
         width: "90%",

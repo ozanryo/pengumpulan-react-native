@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, ToastAndroid} from "react-native"
 import Icon from "react-native-vector-icons/Ionicons"
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
-
-export default class History2 extends Component {
+import { connect } from 'react-redux';
+import {EditUser} from '../index'
+class History2 extends Component {
     constructor(props){
         super(props);
         this.state={
@@ -31,7 +32,8 @@ export default class History2 extends Component {
             deleteInfo: false,
             detailsInfo: false,
             sampleData: [],
-            detailsSampleData: []
+            detailsSampleData: [],
+            editCondition: false
         }
     }
     /** Latihan, Screen Capture ada di branch main readme.md */
@@ -53,7 +55,8 @@ export default class History2 extends Component {
                 .then((response)=>response.json())
                 .then((ResponseJson)=>{
                     console.log("Data :", ResponseJson)
-                    this.setState({sampleData: ResponseJson.data})
+                    // this.setState({sampleData: ResponseJson.data})
+                    this.props.fetchWorkerData(ResponseJson.data)
                 })
                 .catch((error)=>{
                     console.log("Error :", error)
@@ -128,35 +131,47 @@ export default class History2 extends Component {
                     console.log("Error :", error)
                 })
     }
+
+    editUser(){
+        this.setState({editCondition: true})
+    }
+
     render(){
+        if(this.state.editCondition != false){
+            return(
+                <EditUser />
+            )
+        }
         return(
             <View contentContainerStyle={styles.main}>
                 {
-                    !this.state.emptyNotice && this.state.historyShop != null ? 
+                    this.props.getWorkerData.data.length != 0? 
                     <View>
-                        {/* <SwipeListView 
+                        <SwipeListView 
                             style={styles.listSwipe}
-                            data={this.state.historyShop}
+                            data={this.props.getWorkerData.data}
                             renderItem={(data, rowMap)=>(
-                                <View style={styles.rowFront}>
-                                    <Text style={styles.textFront}>{data.item.date} : {data.item.phone}</Text>
+                                <View key={rowMap} style={styles.rowFront}>
+                                    <Text style={styles.textFront}>{data.item.nama}</Text>
                                 </View>
                             )}
                             renderHiddenItem={(data, rowMap) => (
-                                <View style={styles.rowBack}>
+                                <View key={rowMap} style={styles.rowBack}>
                                     <View style={styles.rightRowBack}>
-                                        <TouchableOpacity style={{paddingHorizontal:5}}>
-                                            <Icon  name='information-circle' size={45} color='#01579B' />
+                                        <TouchableOpacity style={{paddingHorizontal:10}} onPress={()=>this.detailsData(data.item.id)}>
+                                            <Icon  name='information-circle' size={35} color='#01579B' />
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={{paddingHorizontal:5}} onPress={()=>this.deleteButton()}>
-                                            <Icon name='trash' size={45} color='#B71C1C' />
+                                        <TouchableOpacity style={{paddingHorizontal:5}} onPress={()=>this.deleteButton(data.item.id)}>
+                                            <Icon name='trash' size={35} color='#B71C1C' />
                                         </TouchableOpacity>
                                     </View>
                                 </View>
                             )}
                             rightOpenValue={-130}
-                        /> */}
-                        {
+                            closeOnRowOpen={true}
+                            closeOnRowBeginSwipe={true}
+                        />
+                        {/* {
                             this.state.sampleData.map((item, index)=>(
                                 <SwipeRow key={index} style={styles.listSwipe} rightOpenValue={-130}>
                                     <View style={styles.rowBack}>
@@ -170,12 +185,11 @@ export default class History2 extends Component {
                                         </View>
                                     </View>
                                     <View style={styles.rowFront}>
-                                        {/* <Text style={styles.textFront}>{item.date} : {item.phone}</Text> */}
                                         <Text style={styles.textFront}>{item.nama}</Text>
                                     </View>
                                 </SwipeRow>
                             ))
-                        }
+                        } */}
                         <Modal
                             animationType='slide'
                             transparent={true}
@@ -209,23 +223,40 @@ export default class History2 extends Component {
                                         <Text style={{fontWeight: "700", fontSize: 20, color:"black"}}>Jabatan : <Text style={{fontWeight: "200"}}>{this.state.detailsSampleData.jabatan}</Text></Text>
                                         <Text style={{fontWeight: "700", fontSize: 20, color:"black"}}>Masa Kerja : <Text style={{fontWeight: "200"}}>{this.state.detailsSampleData.masa_kerja}</Text></Text>
                                    </View>
-                                   <TouchableOpacity style={styles.noButton} onPress={()=>this.cancelButton()}>
-                                        <Text style={styles.deleteBtnText} >Keluar</Text>
-                                    </TouchableOpacity>
+                                   <View style={styles.detailsUtils}>
+                                        <TouchableOpacity style={styles.editButton} onPress={()=>this.setState({editCondition: true})}>
+                                            <Text style={styles.ediBtnText} >Edit</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.closeButton} onPress={()=>this.cancelButton()}>
+                                            <Text style={styles.closeBtnText} >Keluar</Text>
+                                        </TouchableOpacity>
+                                   </View>
                                </View>
                             </View> 
                         </Modal>
                     </View>
                     :
                     <View style={styles.emptyLayout}>
-                        <Icon name='file-tray-outline' size={320} color='#FFECB3' />
-                        <Text style={styles.emptyText}>Empty History</Text>
+                        <Icon name='file-tray-outline' size={320} color='#DE1B1B' style={{marginTop: 30}}/>
+                        <Text style={styles.emptyText}>Sorry, Currently There Isn't Any Worker Data on the Database</Text>
                     </View>
                 }
             </View>
         )
     }
 }
+
+const mapStateToProps=(state)=>({
+    getWorkerData: state.worker
+})
+
+const mapDispatchToProps=(dispatch)=>({
+    fetchWorkerData: (workerData)=>dispatch(
+        {type:'GET_LIST_WORKER', data:workerData}
+    )
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(History2);
 
 const styles = StyleSheet.create({
     main: {
@@ -237,32 +268,34 @@ const styles = StyleSheet.create({
     emptyLayout:{
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     emptyText:{
         fontSize: 40,
-        color: '#FFECB3',
-        fontWeight: 'bold'
+        color: '#DE1B1B',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        width: '80%'
     },
     listSwipe:{
         width: '100%'
     },
     rowFront:{
         alignItems: 'center',
-        backgroundColor: '#FFA000',
+        backgroundColor: '#DE1B1B',
         borderBottomColor: 'black',
         borderBottomWidth: 0.7,
         justifyContent: 'center',
         height: 75,
     },
     textFront:{
-        color: 'white',
+        color: '#EDD9D9',
         fontSize: 25,
         fontWeight: '700'
     },
     rowBack: {
         alignItems: 'center',
-        backgroundColor: '#F0F4C3',
+        backgroundColor: '#F6EEEE',
         justifyContent: 'center',
         flex: 1,
         flexDirection: 'row',
@@ -297,22 +330,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#2E7D32',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 55,
-        height: 35,
+        width: 70,
+        height: 40,
         marginHorizontal: 10,
-        borderRadius: 10
+        borderRadius: 25
     },
     noButton: {
         backgroundColor: '#B71C1C',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 65,
-        height: 35,
+        width: 85,
+        height: 40,
         marginHorizontal: 10,
-        borderRadius: 10
+        borderRadius: 25
     },
     deleteBtnText: {
-        fontSize: 15,
+        fontSize: 20,
         color: 'white',
         paddingHorizontal:5
     },
@@ -331,5 +364,36 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "white",
         borderRadius: 15
-    }
+    },
+    detailsUtils:{
+        flexDirection: 'row'
+    },
+    closeButton:{
+        backgroundColor: '#B71C1C',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 100,
+        height: 40,
+        marginHorizontal: 10,
+        borderRadius: 25
+    }, 
+    closeBtnText:{
+        fontSize: 20,
+        color: 'white',
+        paddingHorizontal:5
+    },
+    editButton:{
+        backgroundColor: '#262CAF',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 80,
+        height: 40,
+        marginHorizontal: 10,
+        borderRadius: 25
+    },
+    ediBtnText:{
+        fontSize: 20,
+        color: 'white',
+        paddingHorizontal:5
+    },
 })

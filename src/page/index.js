@@ -9,6 +9,9 @@ import Networking from "./home/networking";
 import Networking2 from "./home/netoworking2";
 import History from "./history/history";
 import History2 from "./history/history2";
-import Swipe from "./home/pageSwipe"
+import PageRedux from "./pageRedux/pageRedux";
+import FirstPage from "./firstPage/firstPage";
+import AddUser from "./addUser/addUser";
+import EditUser from "./editUser/editUser";
 
-export {Login, Home, Signup, Layouting, Profile, Product, History, History2, Lifecycle, Networking, Networking2};
+export {Login, Home, Signup, Layouting, Profile, Product, History, History2, FirstPage, AddUser, EditUser, Lifecycle, Networking, Networking2, PageRedux};

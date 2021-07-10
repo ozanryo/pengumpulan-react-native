@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react'
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, ScrollView } from "react-native"
 import {ListItem, Image, Button} from "react-native-elements"
@@ -10,8 +11,16 @@ class Home extends Component {
         }
     }
 
-    // onClickDetails=(index)=>{
-    //     Alert.alert("Anda memasuki detail Provider " + this.state.listProduct[index].name)
+    // componentDidMount(){
+    //     this.autoLogout
+    // }
+
+    // async autoLogout(){
+    //     try{
+    //         await AsyncStorage.removeItem('token');
+    //     } catch(e){
+    //         console.log(e)
+    //     }
     // }
 
     render(){

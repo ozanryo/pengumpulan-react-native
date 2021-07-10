@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons"
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import { connect } from 'react-redux';
 import {EditUser} from '../index'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 class History2 extends Component {
     constructor(props){
         super(props);
@@ -33,7 +34,8 @@ class History2 extends Component {
             detailsInfo: false,
             sampleData: [],
             detailsSampleData: [],
-            editCondition: false
+            editCondition: false,
+            claimToken: ""
         }
     }
     /** Latihan, Screen Capture ada di branch main readme.md */
@@ -43,12 +45,23 @@ class History2 extends Component {
         this.getData()
     }
 
-    getData(){
+    async getToken(){
+        try{
+            const getToken = await AsyncStorage.getItem('token')
+            this.setState({claimToken: getToken})
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    async getData(){
+        const token = await AsyncStorage.getItem('token')
         const optionFetch = {
             method: "GET",
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+token
             }
         }
 
@@ -66,12 +79,14 @@ class History2 extends Component {
                 })
     }
 
-    detailsData(index){
+    async detailsData(index){
+        const token = await AsyncStorage.getItem('token')
         const optionFetch = {
             method: "GET",
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+token
             }
         }
 
@@ -87,13 +102,15 @@ class History2 extends Component {
                 })
     }
 
-    deleteButton(index){
+    async deleteButton(index){
         // this.setState({deleteInfo: true})
+        const token = await AsyncStorage.getItem('token')
         const optionFetch = {
             method: "GET",
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+ token
             }
         }
 
@@ -114,13 +131,15 @@ class History2 extends Component {
     }
 
     /** Latihan */
-    deleteOkayButton(index){
+    async deleteOkayButton(index){
+        const token = await AsyncStorage.getItem('token')
         this.setState({deleteInfo: false})
         const optionFetch = {
             method: "DELETE",
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+ token
             }
         }
         return fetch('http://207.148.121.63/api/employee/'+ index, optionFetch)

@@ -28,12 +28,12 @@ const style = StyleSheet.create({
     },
     startedButton: {
         width: '80%',
-        height: 50,
+        height: 60,
         backgroundColor: '#C70707',
         borderRadius: 25,
         alignItems: 'center',
         justifyContent: 'center',
-        marginVertical: 25
+        marginTop: 35
     },
     startedBtnText: {
         color: 'white',

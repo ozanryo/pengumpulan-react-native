@@ -1,14 +1,14 @@
 const initialState={
     loginStat: false,
-    user: []
+    user: null
 }
 
 export default function authentReducer(state=initialState, action){
     switch(action.type){
         case 'LOGIN_SUCCESS':
             return{
-                ...state,
-                loginStat: true
+                loginStat: true,
+                user: action.user
             }
         case 'LOGOUT':
             return{

@@ -9,28 +9,16 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from "react-native-vector-icons/Ionicons"
 import LoginNav from '../loginNavigation/loginNav';
 import {connect} from 'react-redux'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-class Navigator extends Component {
-    constructor(props){
-        super(props);
-        this.state={
-            loginStat: true
-        }
-    }
-    render(){
-        console.log("Login Stat == ", this.props.getLoginState.loginStat)
-        return(
-            <NavigationContainer>
-                {
-                    this.props.getLoginState.loginStat == false ? 
-                    // this.state.loginStat == false ? 
-                    <LoginNav />
-                    :
-                    <Tab.Navigator
+function HomeTab(){
+    return(
+        <Tab.Navigator
+                        name='HomeTab'
                         tabBarOptions={{
                         showLabel:false,
                         style:{
@@ -46,14 +34,14 @@ class Navigator extends Component {
                         }
                     }}
                     >
-                        {/* <Tab.Screen name="Home" component={Home} options={{
+                        <Tab.Screen name="Home" component={Home} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs} >
-                                    <Icon name='home' color={focused ? "#FF6F00" : "#363535"} size={30} />
-                                    <Text style={{color: focused ? "#FF6F00" : "#363535", fontSize: 12}} >HOME</Text>
+                                    <Icon name='home' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >HOME</Text>
                                 </View>
                             )
-                        }}/> */}
+                        }}/>
                         <Tab.Screen name="Add" component={AddUser} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs} >
@@ -102,6 +90,14 @@ class Navigator extends Component {
                                 </View>
                             )
                         }} /> */}
+                        {/* <Tab.Screen name="Storage" component={Storage} options={{
+                            tabBarIcon: ({focused}) => (
+                                <View style={styling.tabs}>
+                                    <Icon name='logo-dropbox' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >BOX</Text>
+                                </View>
+                            )
+                        }} /> */}
                         <Tab.Screen name="Profile" component={Profile2} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs}>
@@ -118,15 +114,50 @@ class Navigator extends Component {
                                 </View>
                             )
                         }} /> */}
-                        <Tab.Screen name="Storage" component={Storage} options={{
-                            tabBarIcon: ({focused}) => (
-                                <View style={styling.tabs}>
-                                    <Icon name='logo-dropbox' color={focused ? "#C70707" : "#363535"} size={30} />
-                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >BOX</Text>
-                                </View>
-                            )
-                        }} />
                     </Tab.Navigator>
+    )
+}
+
+class Navigator extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            statusLogin: false,
+            isInitiated: false,
+            routeName: 'LoginNav'
+        }
+    }
+    componentDidMount(){
+        this.checkToken();
+    }
+
+    async checkToken(){
+        const getToken = await AsyncStorage.getItem('token')
+
+        if (getToken){
+            this.setState({
+                routeName: 'LoginNav'
+            })
+        }
+
+        this.setState({isInitiated: true})
+    }
+
+    render(){
+        if(this.state.isInitiated == false){
+            return null
+        } 
+        return(
+            <NavigationContainer>
+                {
+                    <Stack.Navigator initialRouteName={this.state.routeName}>
+                        <Stack.Screen name='LoginNav' component={LoginNav} options={{
+                            headerShown:false
+                        }}/>
+                        <Stack.Screen name='HomeTab' component={HomeTab} options={{
+                            headerShown:false
+                        }}/>
+                    </Stack.Navigator>
                 }
             </NavigationContainer>
         )

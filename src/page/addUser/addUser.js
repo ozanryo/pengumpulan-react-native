@@ -3,6 +3,7 @@ import { ToastAndroid } from 'react-native';
 import {View, Text, TouchableOpacity, TextInput, StyleSheet, ScrollView, Modal, ActivityIndicator} from 'react-native'
 import Icon from "react-native-vector-icons/Ionicons"
 import {connect} from "react-redux"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class AddUser extends Component {
     constructor(props){
@@ -15,15 +16,30 @@ class AddUser extends Component {
             masa_kerja: "",
             submitCondition: false,
             loadingCondition: true,
+            claimToken: ""
         }
     }
 
-    getData(){
+    async getToken(){
+        try{
+            // const getToken = await AsyncStorage.getItem('token')
+            // this.setState({claimToken: getToken})
+            return await AsyncStorage.getItem('token');
+
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    async getData(){
+        // await this.getToken()
+        const token = await AsyncStorage.getItem('token')
         const optionFetch = {
             method: "GET",
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+token
             }
         }
 
@@ -47,13 +63,15 @@ class AddUser extends Component {
         }
     }
 
-    fetchSubmitData(){
+    async fetchSubmitData(){
+        const token = await AsyncStorage.getItem('token')
         this.setState({submitCondition: true})
         const optionFetch = {
             method: "POST",
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+token
             },
             body: JSON.stringify({
                 nama: this.state.nama,

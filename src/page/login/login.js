@@ -4,63 +4,79 @@ import { Button as ButtonElement, Image, ListItem} from "react-native-elements"
 import Home from "../home/home"
 import Icon from "react-native-vector-icons/Ionicons"
 import {connect} from "react-redux"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 class Login extends Component {
     constructor(props){
         super(props);
         this.state={
-            username: "Admin",
-            password: "Admin",
+            email: "ozan@app.com",
+            password: "password",
             loginState: false,
-            listUser: [
-                {
-                    username: "Admin",
-                    password: "Admin"
-                }, {
-                    username: "Staff",
-                    password: "Staff"
-                }
-            ],
             dataSecureEntry: true
         }
     }
 
-    
+    login(){
+        const optionFetch = {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: this.state.email,
+                password: this.state.password
+            })
+        }
+        return fetch('http://207.148.121.63/api/login', optionFetch)
+                .then((response)=>response.json())
+                .then( async (ResponseJson)=>{
+                    console.log("Data :", ResponseJson.data.access_token)
+                    await AsyncStorage.setItem('token', ResponseJson.data.access_token)
+                    await AsyncStorage.setItem('profile', JSON.stringify(ResponseJson.data.user))
+                    console.log("Profile :", ResponseJson.data.user)
+                    this.props.navigation.reset({
+                        index:0, routes:[{name:'HomeTab'}]
+                    })
+                })
+                .catch((error)=>{
+                    console.log("Error :", error)
+                    ToastAndroid.show("Login Error", ToastAndroid.Long)
+                })
+    }
 
     sampleLoginSubmit=()=>{
         if(this.state.username == "" || this.state.password == ""){
             ToastAndroid.show("Masukkan Username dan Password", ToastAndroid.SHORT)
         } else {
-            for(let index=0; index < this.state.listUser.length; index++){
-                const checkUser = this.state.listUser[index];
-                if (checkUser.username.includes(this.state.username)){
-                    if(checkUser.password.includes(this.state.password)){
-                        ToastAndroid.show("Selamat Datang", ToastAndroid.SHORT)
-                        this.setState({loginState: true, username:"", password:""})
-                        this.props.loginUser()
-                        // this.props.navigation.navigate('Home')
-                    } else{
-                        ToastAndroid.show("Password anda salah", ToastAndroid.SHORT)
-                    }
-                }
-            }
+
+            this.login();
+
+            // for(let index=0; index < this.state.listUser.length; index++){
+            //     const checkUser = this.state.listUser[index];
+            //     if (checkUser.username.includes(this.state.username)){
+            //         if(checkUser.password.includes(this.state.password)){
+            //             ToastAndroid.show("Selamat Datang", ToastAndroid.SHORT)
+            //             this.setState({loginState: true, username:"", password:""})
+            //             // this.props.loginUser()
+            //             this.saveLoginStat();
+            //             // this.props.navigation.navigate('Home')
+            //         } else{
+            //             ToastAndroid.show("Password anda salah", ToastAndroid.SHORT)
+            //         }
+            //     }
+            // }
         }
-        
-
-        // const searchUser = this.state.listUser.filter(user=> {
-        //     user.username.includes(this.state.username);
-        // })
-
-        // this.setState({checkUser: searchUser})
     }
 
     sampleFacebookSubmit=()=>{
-        Alert.alert("Anda masuk ke laman facebook")
+        ToastAndroid.show('Masuk ke Laman Facebook', ToastAndroid.SHORT)
     }
 
     sampleGmailSubmit=()=>{
-        Alert.alert("Anda nmasuk ke laman gmail")
+        ToastAndroid.show('Masuk ke Laman Gmail', ToastAndroid.SHORT)
     }
 
     sampleSignupSubmit=()=>{
@@ -92,9 +108,9 @@ class Login extends Component {
 
                     <TextInput 
                     style={styles.inputForm} 
-                    placeholder="input username" 
-                    onChangeText={(username)=>this.setState({username})}
-                    value={this.state.username}
+                    placeholder="email" 
+                    onChangeText={(email)=>this.setState({email})}
+                    value={this.state.email}
                     />
 
                 </View>
@@ -110,7 +126,7 @@ class Login extends Component {
                     />
                     <TextInput 
                     style={styles.inputForm} 
-                    placeholder="input password" 
+                    placeholder="password" 
                     secureTextEntry={this.state.dataSecureEntry} 
                     onChangeText={(password)=>this.setState({password})}
                     value={this.state.password}
@@ -133,7 +149,7 @@ class Login extends Component {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.button} onPress={() => this.sampleLoginSubmit()}>
+                <TouchableOpacity style={styles.button} onPress={() => this.login()}>
                     <Text style={styles.btnText}>Login</Text>
                 </TouchableOpacity>
 
@@ -260,14 +276,14 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = (state) => ({
-    getLoginState: state.auth
-})
+// const mapStateToProps = (state) => ({
+//     getLoginState: state.auth
+// })
 
 const mapDispatchToProps = (dispatch) => ({
-    loginUser: ()=>dispatch({
-        type: 'LOGIN_SUCCESS'
+    loginUser: (workerData)=>dispatch({
+        type: 'LOGIN_SUCCESS', user:workerData
     })
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(Login);

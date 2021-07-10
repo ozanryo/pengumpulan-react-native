@@ -4,6 +4,7 @@ import {View, Text, TouchableOpacity, TextInput, StyleSheet, ScrollView, Modal, 
 import Icon from "react-native-vector-icons/Ionicons"
 import {connect} from "react-redux"
 import {History2} from '../'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class EditUser extends Component {
     constructor(props){
@@ -19,12 +20,14 @@ class EditUser extends Component {
         }
     }
 
-    getData(){
+    async getData(){
+        const token = await AsyncStorage.getItem('token')
         const optionFetch = {
             method: "GET",
             headers: {
                 Accept: "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+ token
             }
         }
 
@@ -48,45 +51,41 @@ class EditUser extends Component {
             masa_kerja: this.state.masa_kerja
         }
 
-        this.fetchDataRegisterOrder(this.props.getEditState.currentWorker.id, "PUT", editWorker)
+        this.fetchDataRegisterOrder(this.props.getEditState.currentWorker.id, editWorker)
     }
 
-    fetchDataRegisterOrder = (index, inputMethod, dataToObj) => {
+    async fetchDataRegisterOrder(index, dataToObj){
         this.setState({submitCondition: true})
-        try{
-            const option = {
-                method: inputMethod,
-                mode: "cors",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(dataToObj)
-            }
-    
-            fetch("http://207.148.121.63/api/employee/" + index, option)
-            .then((response)=>response.json())
-            .then((ResponseJson)=>{
-                console.log("Data :", ResponseJson)
-                this.getData();
-                this.setState({
-                    nama: "",
-                    nip: "",
-                    alamat: "",
-                    jabatan: "",
-                    masa_kerja: "",
-                    submitCondition: false,
-                    loadingCondition: false
-                })
-            })
-            .catch((error)=>{
-                console.log("Error :", error)
-            })
-        } catch (error) {
-            if (error instanceof fetch.AbortError) {
-                console.log("Request Hotel Data Was Aborted")
-            }
+        const token = await AsyncStorage.getItem('token')
+        const option = {
+            method: 'PUT',
+            mode: "cors",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer '+ token
+            },
+            body: JSON.stringify(dataToObj)
         }
+
+        fetch("http://207.148.121.63/api/employee/" + index, option)
+        .then((response)=>response.json())
+        .then((ResponseJson)=>{
+            console.log("Data :", ResponseJson)
+            this.getData();
+            this.setState({
+                nama: "",
+                nip: "",
+                alamat: "",
+                jabatan: "",
+                masa_kerja: "",
+                submitCondition: false,
+                loadingCondition: false
+            })
+        })
+        .catch((error)=>{
+            console.log("Error :", error)
+        })
     }
 
     closeBtn(){

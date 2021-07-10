@@ -7,12 +7,15 @@ export default function authentReducer(state=initialState, action){
     switch(action.type){
         case 'LOGIN_SUCCESS':
             return{
+                ...state,
                 loginStat: true
             }
-        case 'LOGIN_FAIL':
+        case 'LOGOUT':
             return{
                 ...state,
                 loginStat:false
             }
+        default:
+            return initialState
     }
 }

@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { View, Text } from 'react-native';
-import {Home, Profile, Product, Login, Signup, History, History2, PageRedux, AddUser, EditUser} from "../../page"
+import {Home, Profile, Profile2, Product, Login, Signup, History, History2, PageRedux, AddUser, EditUser, Agenda, Storage} from "../../page"
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from "react-native-vector-icons/Ionicons"
 import LoginNav from '../loginNavigation/loginNav';
+import {connect} from 'react-redux'
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-export default class Navigator extends Component {
+class Navigator extends Component {
     constructor(props){
         super(props);
         this.state={
@@ -21,10 +22,12 @@ export default class Navigator extends Component {
         }
     }
     render(){
+        console.log("Login Stat == ", this.props.getLoginState.loginStat)
         return(
             <NavigationContainer>
                 {
-                    this.state.loginStat == false ? 
+                    this.props.getLoginState.loginStat == false ? 
+                    // this.state.loginStat == false ? 
                     <LoginNav />
                     :
                     <Tab.Navigator
@@ -59,11 +62,19 @@ export default class Navigator extends Component {
                                 </View>
                             )
                         }}/>
-                        <Tab.Screen name="Product" component={Product} options={{
+                        {/* <Tab.Screen name="Product" component={Product} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs}>
                                     <Icon name='pricetags' color={focused ? "#FF6F00" : "#363535"} size={30} />
                                     <Text style={{color: focused ? "#FF6F00" : "#363535", fontSize: 12}} >PRODUCT</Text>
+                                </View>
+                            )
+                        }} /> */}
+                        <Tab.Screen name="Agenda" component={Agenda} options={{
+                            tabBarIcon: ({focused}) => (
+                                <View style={styling.tabs}>
+                                    <Icon name='calendar' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >AGENDA</Text>
                                 </View>
                             )
                         }} />
@@ -91,6 +102,14 @@ export default class Navigator extends Component {
                                 </View>
                             )
                         }} /> */}
+                        <Tab.Screen name="Profile" component={Profile2} options={{
+                            tabBarIcon: ({focused}) => (
+                                <View style={styling.tabs}>
+                                    <Icon name='person' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >PROFILE</Text>
+                                </View>
+                            )
+                        }} />
                         {/* <Tab.Screen name="Edit" component={EditUser} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs}>
@@ -99,12 +118,26 @@ export default class Navigator extends Component {
                                 </View>
                             )
                         }} /> */}
+                        <Tab.Screen name="Storage" component={Storage} options={{
+                            tabBarIcon: ({focused}) => (
+                                <View style={styling.tabs}>
+                                    <Icon name='logo-dropbox' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >BOX</Text>
+                                </View>
+                            )
+                        }} />
                     </Tab.Navigator>
                 }
             </NavigationContainer>
         )
     }
 }
+
+const mapStateToProps = (state) => ({
+    getLoginState: state.auth
+})
+ 
+export default connect(mapStateToProps)(Navigator)
 
 // export default function Navigator(){
 //     return(

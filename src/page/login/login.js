@@ -3,14 +3,15 @@ import { View, Text, Button, TextInput, StyleSheet, Alert, TouchableOpacity, Scr
 import { Button as ButtonElement, Image, ListItem} from "react-native-elements"
 import Home from "../home/home"
 import Icon from "react-native-vector-icons/Ionicons"
+import {connect} from "react-redux"
 
 
 class Login extends Component {
     constructor(props){
         super(props);
         this.state={
-            username: "",
-            password: "",
+            username: "Admin",
+            password: "Admin",
             loginState: false,
             listUser: [
                 {
@@ -37,7 +38,8 @@ class Login extends Component {
                     if(checkUser.password.includes(this.state.password)){
                         ToastAndroid.show("Selamat Datang", ToastAndroid.SHORT)
                         this.setState({loginState: true, username:"", password:""})
-                        this.props.navigation.navigate('Home')
+                        this.props.loginUser()
+                        // this.props.navigation.navigate('Home')
                     } else{
                         ToastAndroid.show("Password anda salah", ToastAndroid.SHORT)
                     }
@@ -74,11 +76,6 @@ class Login extends Component {
     }
 
     render(){
-        // if(this.state.loginState != false){
-        //     return(
-        //         <Home />
-        //     )
-        // }
         return(
             <View style={styles.container} >
                 <Text style={styles.title}>Login</Text>
@@ -262,6 +259,15 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     }
 });
-  
 
-export default Login;
+const mapStateToProps = (state) => ({
+    getLoginState: state.auth
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    loginUser: ()=>dispatch({
+        type: 'LOGIN_SUCCESS'
+    })
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -3,6 +3,7 @@ import { ToastAndroid } from 'react-native';
 import {View, Text, TouchableOpacity, TextInput, StyleSheet, ScrollView, Modal, ActivityIndicator} from 'react-native'
 import Icon from "react-native-vector-icons/Ionicons"
 import {connect} from "react-redux"
+import {History2} from '../'
 
 class EditUser extends Component {
     constructor(props){
@@ -18,7 +19,97 @@ class EditUser extends Component {
         }
     }
 
+    getData(){
+        const optionFetch = {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            }
+        }
+
+        return fetch("http://207.148.121.63/api/employee?owner=3", optionFetch)
+                .then((response)=>response.json())
+                .then((ResponseJson)=>{
+                    console.log("Data :", ResponseJson)
+                    this.props.fetchWorkerData(ResponseJson.data)
+                })
+                .catch((error)=>{
+                    console.log("Error :", error)
+                })
+    }
+
+    submitData(){
+        const editWorker = {
+            nama: this.state.name,
+            nip: this.state.nip,
+            alamat: this.state.alamat,
+            jabatan: this.state.jabatan,
+            masa_kerja: this.state.masa_kerja
+        }
+
+        this.fetchDataRegisterOrder(this.props.getEditState.currentWorker.id, "PUT", editWorker)
+    }
+
+    fetchDataRegisterOrder = (index, inputMethod, dataToObj) => {
+        this.setState({submitCondition: true})
+        try{
+            const option = {
+                method: inputMethod,
+                mode: "cors",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(dataToObj)
+            }
+    
+            fetch("http://207.148.121.63/api/employee/" + index, option)
+            .then((response)=>response.json())
+            .then((ResponseJson)=>{
+                console.log("Data :", ResponseJson)
+                this.getData();
+                this.setState({
+                    nama: "",
+                    nip: "",
+                    alamat: "",
+                    jabatan: "",
+                    masa_kerja: "",
+                    submitCondition: false,
+                    loadingCondition: false
+                })
+            })
+            .catch((error)=>{
+                console.log("Error :", error)
+            })
+        } catch (error) {
+            if (error instanceof fetch.AbortError) {
+                console.log("Request Hotel Data Was Aborted")
+            }
+        }
+    }
+
+    closeBtn(){
+        this.getData();
+        this.props.finishEditing();
+    }
+
+    componentDidMount(){
+        this.setState({
+            nama: this.props.getEditState.currentWorker.nama,
+            nip: this.props.getEditState.currentWorker.nip,
+            alamat: this.props.getEditState.currentWorker.alamat,
+            jabatan: this.props.getEditState.currentWorker.jabatan,
+            masa_kerja: this.props.getEditState.currentWorker.masa_kerja,
+        })
+    }
+
     render(){
+        if(this.props.getEditState.editCondition == false){
+            return(
+                <History2 />
+            )
+        }
         return(
             <ScrollView contentContainerStyle={styling.main}>
                 <Text style={styling.title}>EDIT WORKER</Text>
@@ -61,7 +152,7 @@ class EditUser extends Component {
                     value={this.state.masa_kerja}
                     onChangeText={(masa_kerja)=>this.setState({masa_kerja})}
                     keyboardType='number-pad'
-                    />
+                />
                 </View>
 
                 <TouchableOpacity style={styling.saveBtn} onPress={()=>this.submitData()}>
@@ -69,7 +160,7 @@ class EditUser extends Component {
                     <Text style={styling.btnText}>Save</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styling.closeBtn} onPress={()=>this.submitData()}>
+                <TouchableOpacity style={styling.closeBtn} onPress={()=>this.closeBtn()}>
                     <Icon name='close' color='white' size={35} style={{marginHorizontal: 10}} />
                     <Text style={styling.btnText}>Batal</Text>
                 </TouchableOpacity>
@@ -88,14 +179,26 @@ class EditUser extends Component {
                             />
                         </View>
                     </View>
-                    
                 </Modal>
             </ScrollView>
         )
     }
 }
 
-export default EditUser;
+const mapStateToProps=(state)=>({
+    getEditState:state.current
+})
+
+const mapDispatchToProps=(dispatch)=>({
+    fetchWorkerData: (workerData)=>dispatch({
+        type:'GET_LIST_WORKER', data: workerData
+    }),
+    finishEditing: ()=>dispatch({
+        type: 'DONE_EDITING'
+    })
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditUser);
 
 const styling = StyleSheet.create({
     main: {

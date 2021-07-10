@@ -39,6 +39,7 @@ class History2 extends Component {
     /** Latihan, Screen Capture ada di branch main readme.md */
 
     componentDidMount(){
+        console.log("History2")
         this.getData()
     }
 
@@ -55,8 +56,10 @@ class History2 extends Component {
                 .then((response)=>response.json())
                 .then((ResponseJson)=>{
                     console.log("Data :", ResponseJson)
+                    console.log(this.props.getLoginStat)
                     // this.setState({sampleData: ResponseJson.data})
                     this.props.fetchWorkerData(ResponseJson.data)
+                    
                 })
                 .catch((error)=>{
                     console.log("Error :", error)
@@ -77,7 +80,7 @@ class History2 extends Component {
                 .then((ResponseJson)=>{
                     console.log("Data :", ResponseJson)
                     this.setState({detailsSampleData: ResponseJson.data, detailsInfo: true})
-
+                    
                 })
                 .catch((error)=>{
                     console.log("Error :", error)
@@ -133,11 +136,12 @@ class History2 extends Component {
     }
 
     editUser(){
-        this.setState({editCondition: true})
+        this.setState({detailsInfo: false})
+        this.props.fetchCurrentData(this.state.detailsSampleData)
     }
 
     render(){
-        if(this.state.editCondition != false){
+        if(this.props.getEditResponse.editCondition != false){
             return(
                 <EditUser />
             )
@@ -145,7 +149,7 @@ class History2 extends Component {
         return(
             <View contentContainerStyle={styles.main}>
                 {
-                    this.props.getWorkerData.data.length != 0? 
+                    this.props.getWorkerData.data != null? 
                     <View>
                         <SwipeListView 
                             style={styles.listSwipe}
@@ -224,7 +228,7 @@ class History2 extends Component {
                                         <Text style={{fontWeight: "700", fontSize: 20, color:"black"}}>Masa Kerja : <Text style={{fontWeight: "200"}}>{this.state.detailsSampleData.masa_kerja}</Text></Text>
                                    </View>
                                    <View style={styles.detailsUtils}>
-                                        <TouchableOpacity style={styles.editButton} onPress={()=>this.setState({editCondition: true})}>
+                                        <TouchableOpacity style={styles.editButton} onPress={()=>this.editUser()}>
                                             <Text style={styles.ediBtnText} >Edit</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={styles.closeButton} onPress={()=>this.cancelButton()}>
@@ -247,12 +251,17 @@ class History2 extends Component {
 }
 
 const mapStateToProps=(state)=>({
-    getWorkerData: state.worker
+    getWorkerData: state.worker,
+    getEditResponse: state.current,
+    getLoginStat: state.auth
 })
 
 const mapDispatchToProps=(dispatch)=>({
     fetchWorkerData: (workerData)=>dispatch(
         {type:'GET_LIST_WORKER', data:workerData}
+    ),
+    fetchCurrentData: (workerData)=>dispatch(
+        {type: 'GET_CURRENT_DATA', currentWorker: workerData}
     )
 })
 

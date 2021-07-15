@@ -3,32 +3,12 @@ import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, ToastAndroi
 import Icon from "react-native-vector-icons/Ionicons"
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 import { connect } from 'react-redux';
-import {EditUser} from '../index'
+import {EditUser, AddUser} from '../index'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 class History2 extends Component {
     constructor(props){
         super(props);
         this.state={
-            historyShop: [
-                {
-                    pulsa: 10000,
-                    harga: 12500,
-                    phone: '0811531242',
-                    date: '12-07-21'
-                },
-                {
-                    pulsa: 20000,
-                    harga: 21500,
-                    phone: '0812431242',
-                    date: '12-06-21'
-                },
-                {
-                    pulsa: 50000,
-                    harga: 51500,
-                    phone: '0821331242',
-                    date: '20-06-12'
-                },
-            ],
             emptyNotice: false,
             deleteInfo: false,
             detailsInfo: false,
@@ -157,16 +137,34 @@ class History2 extends Component {
     editUser(){
         this.setState({detailsInfo: false})
         this.props.fetchCurrentData(this.state.detailsSampleData)
+        this.props.navigation.navigate('Edit User')
+    }
+
+    addUser(){
+        this.props.beginEdit()
     }
 
     render(){
-        if(this.props.getEditResponse.editCondition != false){
-            return(
-                <EditUser />
-            )
-        }
+        // if(this.props.getEditResponse.editCondition != false){
+        //     return(
+        //         <EditUser />
+        //     )
+        // } 
+        // else if(this.props.getAddStat.addCondition != false){
+        //     return(
+        //         <AddUser />
+        //     )
+        // }
         return(
             <View contentContainerStyle={styles.main}>
+                <View style={styles.titleLayout}>
+                    <View style={styles.titleView}>
+                        <Text style={styles.titleTextStyle}>Your Worker List</Text>
+                        <TouchableOpacity onPress={()=>this.props.navigation.navigate('Create User')}>
+                            <Icon name='person-add' size={45} style={{borderLeftWidth: 0.7, borderLeftColor: 'black', paddingLeft:10}} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
                 {
                     this.props.getWorkerData.data != null? 
                     <View>
@@ -190,9 +188,10 @@ class History2 extends Component {
                                     </View>
                                 </View>
                             )}
-                            rightOpenValue={-130}
+                            rightOpenValue={-140}
                             closeOnRowOpen={true}
                             closeOnRowBeginSwipe={true}
+                            stopLeftSwipe={-1}
                         />
                         {/* {
                             this.state.sampleData.map((item, index)=>(
@@ -260,7 +259,7 @@ class History2 extends Component {
                     </View>
                     :
                     <View style={styles.emptyLayout}>
-                        <Icon name='file-tray-outline' size={320} color='#DE1B1B' style={{marginTop: 30}}/>
+                        <Icon name='file-tray-outline' size={320} color='#D37878' style={{marginTop: 30}}/>
                         <Text style={styles.emptyText}>Sorry, Currently There Isn't Any Worker Data on the Database</Text>
                     </View>
                 }
@@ -272,7 +271,8 @@ class History2 extends Component {
 const mapStateToProps=(state)=>({
     getWorkerData: state.worker,
     getEditResponse: state.current,
-    getLoginStat: state.auth
+    getLoginStat: state.auth,
+    getAddStat: state.add
 })
 
 const mapDispatchToProps=(dispatch)=>({
@@ -281,6 +281,9 @@ const mapDispatchToProps=(dispatch)=>({
     ),
     fetchCurrentData: (workerData)=>dispatch(
         {type: 'GET_CURRENT_DATA', currentWorker: workerData}
+    ),
+    beginEdit: ()=>dispatch(
+        {type: 'ADD_BEGIN'}
     )
 })
 
@@ -300,30 +303,50 @@ const styles = StyleSheet.create({
     },
     emptyText:{
         fontSize: 40,
-        color: '#DE1B1B',
+        color: '#D37878',
         fontWeight: 'bold',
         textAlign: 'center',
         width: '80%'
+    },
+    titleLayout:{
+        height: "20%",
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        borderBottomWidth: 0.5,
+        borderBottomColor: 'black'
+    },
+    titleView:{
+        flexDirection: 'row'
+    },
+    titleTextStyle:{
+        fontSize: 35,
+        fontWeight: '900',
+        marginLeft: 15,
+        marginRight: "10%"
     },
     listSwipe:{
         width: '100%'
     },
     rowFront:{
         alignItems: 'center',
-        backgroundColor: '#DE1B1B',
+        backgroundColor: '#D13737',
         borderBottomColor: 'black',
         borderBottomWidth: 0.7,
         justifyContent: 'center',
+        borderTopRightRadius: 15,
+        borderBottomRightRadius: 15,
         height: 75,
+        width: 430
     },
     textFront:{
         color: '#EDD9D9',
         fontSize: 25,
-        fontWeight: '700'
+        fontWeight: '700',
+        textAlign: 'right'
     },
     rowBack: {
         alignItems: 'center',
-        backgroundColor: '#F6EEEE',
+        backgroundColor: 'white',
         justifyContent: 'center',
         flex: 1,
         flexDirection: 'row',

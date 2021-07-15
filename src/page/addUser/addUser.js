@@ -4,6 +4,7 @@ import {View, Text, TouchableOpacity, TextInput, StyleSheet, ScrollView, Modal, 
 import Icon from "react-native-vector-icons/Ionicons"
 import {connect} from "react-redux"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {History2} from "../"
 
 class AddUser extends Component {
     constructor(props){
@@ -97,10 +98,16 @@ class AddUser extends Component {
                             masa_kerja: ""
                         })
                     }
+                    this.props.navigation.navigate('List User')
                 })
                 .catch((error)=>{
                     console.log("Error :", error)
                 })
+    }
+
+    closeAdd(){
+        this.getData()
+        this.props.navigation.navigate('List User')
     }
 
     render(){
@@ -154,6 +161,11 @@ class AddUser extends Component {
                     <Text style={styling.btnText}>Create</Text>
                 </TouchableOpacity>
 
+                <TouchableOpacity style={styling.closeBtn} onPress={()=>this.closeAdd()}>
+                    <Icon name='close' color='white' size={35} style={{marginHorizontal: 10}} />
+                    <Text style={styling.btnText}>Close</Text>
+                </TouchableOpacity>
+
                 <Modal
                     animationType='slide'
                     transparent={true}
@@ -189,7 +201,8 @@ class AddUser extends Component {
 const styling = StyleSheet.create({
     main: {
         flex:1,
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     title:{
         textAlign: 'center',
@@ -213,8 +226,10 @@ const styling = StyleSheet.create({
         height: 55,
         alignItems: 'center',
         justifyContent: 'center',
-        marginVertical: 20,
-        backgroundColor: '#C70707',
+        marginTop: 20,
+        marginBottom: 5,
+        // backgroundColor: '#EC7208',
+        backgroundColor: 'black',
         borderRadius: 30,
         flexDirection: 'row'
     },
@@ -222,6 +237,16 @@ const styling = StyleSheet.create({
         color: 'white',
         fontSize: 24,
         fontWeight: '900'
+    },
+    closeBtn:{
+        width: '80%',
+        height: 55,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 5,
+        backgroundColor: '#C70707',
+        borderRadius: 30,
+        flexDirection: 'row'
     },
     loadingModalLayout:{
         alignItems: "center",
@@ -260,10 +285,17 @@ const styling = StyleSheet.create({
     }
 })
 
+const mapStateToProps = (state) => ({
+    getAddCondition: state.add
+})
+
 const mapDispatchToProps=(dispatch)=>({
     fetchWorkerData: (workerData)=>dispatch({
         type:'GET_LIST_WORKER', data: workerData
+    }),
+    cancelAddData: ()=>dispatch({
+        type: 'ADD_CANCEL'
     })
 })
 
-export default connect(null, mapDispatchToProps)(AddUser);
+export default connect(mapStateToProps, mapDispatchToProps)(AddUser);

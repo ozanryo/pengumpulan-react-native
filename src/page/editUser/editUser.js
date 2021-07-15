@@ -91,6 +91,7 @@ class EditUser extends Component {
     closeBtn(){
         this.getData();
         this.props.finishEditing();
+        this.props.navigation.navigate('List User')
     }
 
     componentDidMount(){
@@ -104,11 +105,11 @@ class EditUser extends Component {
     }
 
     render(){
-        if(this.props.getEditState.editCondition == false){
-            return(
-                <History2 />
-            )
-        }
+        // if(this.props.getEditState.editCondition == false){
+        //     return(
+        //         <History2 />
+        //     )
+        // }
         return(
             <ScrollView contentContainerStyle={styling.main}>
                 <Text style={styling.title}>EDIT WORKER</Text>
@@ -202,7 +203,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(EditUser);
 const styling = StyleSheet.create({
     main: {
         flex:1,
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     title:{
         textAlign: 'center',

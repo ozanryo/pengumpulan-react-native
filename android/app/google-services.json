@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "350416579979",
+    "project_id": "first-project-a2181",
+    "storage_bucket": "first-project-a2181.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350416579979:android:d8e2523fc7db61af1b538e",
+        "android_client_info": {
+          "package_name": "com.reactpertama"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "350416579979-ggu1t30qtm0b2rrr9ls2jo36l4hp1t7k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6b25rR5oMw_LwfjRp89VeKpKQ3ylnKC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "350416579979-ggu1t30qtm0b2rrr9ls2jo36l4hp1t7k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

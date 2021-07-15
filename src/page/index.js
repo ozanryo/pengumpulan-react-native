@@ -16,9 +16,16 @@ import AddUser from "./addUser/addUser";
 import EditUser from "./editUser/editUser";
 import Agenda from "./agenda/agenda";
 import Storage from "./storage/storage";
+import CameraPage from "./cameraPage/cameraPage";
+import ImageLib from "./imageLib/imageLib";
+import imageLib2 from "./imageLib/imageLib2";
+import Firebase from "./Firebase/firebase";
+import FirebaseAdd from "./Firebase/firebaseAdd";
+import FirebaseEdit from "./Firebase/firebaseEdit";
 
 export {Login, Home, Signup, Layouting, Profile, 
     Profile2, Product, History, History2, FirstPage, 
     AddUser, EditUser, Agenda, Lifecycle, Networking, 
-    Networking2, PageRedux, Storage
+    Networking2, PageRedux, Storage, CameraPage, ImageLib,
+    imageLib2, Firebase,FirebaseAdd, FirebaseEdit
 };

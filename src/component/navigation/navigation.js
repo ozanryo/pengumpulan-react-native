@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { View, Text } from 'react-native';
-import {Home, Profile, Profile2, Product, Login, Signup, History, History2, PageRedux, AddUser, EditUser, Agenda, Storage} from "../../page"
+
+import {Home, Profile, Profile2, Product, 
+    Login, Signup, History, History2, 
+    PageRedux, AddUser, EditUser, Agenda, 
+    Storage, CameraPage, ImageLib, imageLib2,
+    Firebase, FirebaseAdd, FirebaseEdit
+} from "../../page"
+
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -42,14 +49,14 @@ function HomeTab(){
                                 </View>
                             )
                         }}/>
-                        <Tab.Screen name="Add" component={AddUser} options={{
+                        {/* <Tab.Screen name="Add" component={AddUser} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs} >
                                     <Icon name='person-add' color={focused ? "#C70707" : "#363535"} size={30} />
                                     <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >ADD</Text>
                                 </View>
                             )
-                        }}/>
+                        }}/> */}
                         {/* <Tab.Screen name="Product" component={Product} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs}>
@@ -74,7 +81,15 @@ function HomeTab(){
                                 </View>
                             )
                         }} /> */}
-                        <Tab.Screen name="List" component={History2} options={{
+                        {/* <Tab.Screen name="List" component={History2} options={{
+                            tabBarIcon: ({focused}) => (
+                                <View style={styling.tabs}>
+                                    <Icon name='people' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >LIST</Text>
+                                </View>
+                            )
+                        }} /> */}
+                        <Tab.Screen name="List" component={WorkerOrganizer} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs}>
                                     <Icon name='people' color={focused ? "#C70707" : "#363535"} size={30} />
@@ -98,7 +113,31 @@ function HomeTab(){
                                 </View>
                             )
                         }} /> */}
-                        <Tab.Screen name="Profile" component={Profile2} options={{
+                        {/* <Tab.Screen name="Album" component={imageLib2} options={{
+                            tabBarIcon: ({focused}) => (
+                                <View style={styling.tabs}>
+                                    <Icon name='albums' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >ALBUMS</Text>
+                                </View>
+                            )
+                        }} /> */}
+                        {/* <Tab.Screen name="Camera" component={CameraPage} options={{
+                            tabBarIcon: ({focused}) => (
+                                <View style={styling.tabs}>
+                                    <Icon name='camera' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >CAMERA</Text>
+                                </View>
+                            )
+                        }} /> */}
+                        <Tab.Screen name="Firebase" component={FirebaseOrganizer} options={{
+                            tabBarIcon: ({focused}) => (
+                                <View style={styling.tabs}>
+                                    <Icon name='flame' color={focused ? "#C70707" : "#363535"} size={30} />
+                                    <Text style={{color: focused ? "#C70707" : "#363535", fontSize: 12}} >FIREBASE</Text>
+                                </View>
+                            )
+                        }} />
+                        <Tab.Screen name="Profile" component={ProfileNavigation} options={{
                             tabBarIcon: ({focused}) => (
                                 <View style={styling.tabs}>
                                     <Icon name='person' color={focused ? "#C70707" : "#363535"} size={30} />
@@ -118,6 +157,39 @@ function HomeTab(){
     )
 }
 
+function ProfileNavigation(){
+    return(
+        <Stack.Navigator>
+            <Stack.Screen name='Profile' component={Profile2} options={{
+                headerShown:false
+            }}/>
+            <Stack.Screen name='Camera' component={CameraPage}/>
+            <Stack.Screen name='Image Library' component={ImageLib} />
+        </Stack.Navigator>
+    )
+}
+
+function WorkerOrganizer(){
+    return(
+        <Stack.Navigator screenOptions={{headerShown:false}}>
+            <Stack.Screen name='List User' component={History2}/>
+            <Stack.Screen name='Create User' component={AddUser}/>
+            <Stack.Screen name='Edit User' component={EditUser} />
+        </Stack.Navigator>
+    )
+}
+
+function FirebaseOrganizer(){
+    return(
+        <Stack.Navigator>
+            <Stack.Screen name='Firebase List' component={Firebase} options={{headerShown: false}}/>
+            <Stack.Screen name='Firebase Add' component={FirebaseAdd} />
+            <Stack.Screen name='Firebase Edit' component={FirebaseEdit} />
+        </Stack.Navigator>
+    )
+}
+
+
 class Navigator extends Component {
     constructor(props){
         super(props);
@@ -136,7 +208,7 @@ class Navigator extends Component {
 
         if (getToken){
             this.setState({
-                routeName: 'LoginNav'
+                routeName: 'HomeTab'
             })
         }
 

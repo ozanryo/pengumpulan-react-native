@@ -18,7 +18,8 @@ class Profile2 extends Component {
             username: "",
             editProfileStat: false,
             profile:[],
-            detailsInfo: false
+            detailsInfo: false,
+            changePic: false,
         }
     }
 
@@ -60,6 +61,16 @@ class Profile2 extends Component {
         ToastAndroid.show("Memasuki Laman Options", ToastAndroid.SHORT)
     }
 
+    gotoCam(){
+        this.setState({changePic: false})
+        this.props.navigation.navigate('Camera')
+    }
+
+    gotoLibrary(){
+        this.setState({changePic: false})
+        this.props.navigation.navigate('Image Library')
+    }
+
 
     render(){
         return(
@@ -67,23 +78,26 @@ class Profile2 extends Component {
                 <View style={styles.imageLayout}>
                     {
                         this.state.profile.photo != '' ? 
-                        <Avatar
-                            size={250}
-                            rounded
-                            source={{uri: this.state.profile.photo}}
-                            onPress={() => console.log("Works!")}
-                            activeOpacity={0.7}
-                            overlayContainerStyle={{backgroundColor:'#90A4AE'}}
-                        />
+                        <TouchableOpacity onPress={() => this.setState({changePic: true})}>
+                            <Avatar
+                                size={250}
+                                rounded
+                                source={{uri: this.state.profile.photo}}
+                                activeOpacity={0.7}
+                                overlayContainerStyle={{backgroundColor:'#90A4AE'}}
+                            />
+                        </TouchableOpacity>
                         :
-                        <Avatar
-                            size={250}
-                            rounded
-                            icon={{name:'person', type:'Ionicons', size: 200}}
-                            onPress={() => console.log("Works!")}
-                            activeOpacity={0.7}
-                            overlayContainerStyle={{backgroundColor:'#E0E0E0'}}
-                        />
+                        <TouchableOpacity onPress={() => this.setState({changePic: true})}>
+                            <Avatar
+                                size={250}
+                                rounded
+                                icon={{name:'person', type:'Ionicons', size: 200}}
+                                onPress={() => this.setState({changePic: true})}
+                                activeOpacity={0.7}
+                                overlayContainerStyle={{backgroundColor:'#E0E0E0'}}
+                            />
+                        </TouchableOpacity>
                     }
                 </View>
                 <View style={styles.profileLayout}>
@@ -108,7 +122,12 @@ class Profile2 extends Component {
                 >
                     <View style={styles.detailsModalLayout}>
                         <View style={styles.detailsLayout}>
-                            <View style={{marginVertical: 15}}>
+                            <View style={styles.closeBtnPosition}>
+                                <TouchableOpacity style={styles.closePicBtn} onPress={()=>this.setState({detailsInfo: false})}>
+                                    <Icon name='close' size={20} color='white' />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{marginBottom: 15, marginTop: 30}}>
                                 <Text style={styles.textProfile}>Nama : {this.state.profile.name}</Text>
                                 <Text style={styles.textProfile}>Email : {this.state.profile.email}</Text>
                                 <Text style={styles.textProfile}>Phone : {this.state.profile.phone}</Text>
@@ -118,12 +137,37 @@ class Profile2 extends Component {
                                 <Icon name='create' color='white' size={30}/>
                                 <Text style={styles.btnText}>Edit Profile</Text>
                             </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
 
-                            <TouchableOpacity style={styles.closeBtn} onPress={() => this.setState({detailsInfo: false})}>
-                                <Icon name='exit' color='white' size={30}/>
-                                <Text style={styles.btnText}>Close Details</Text>
-                            </TouchableOpacity>
+                <Modal
+                    animationType='slide'
+                    transparent={true}
+                    visible={this.state.changePic}
+                >
+                    <View style={styles.changePicModalLayout}>
+                        <View style={styles.changePicLayout}>
+                            <View style={styles.closeBtnPosition}>
+                                <TouchableOpacity style={styles.closePicBtn} onPress={()=>this.setState({changePic: false})}>
+                                    <Icon name='close' size={20} color='white' />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{marginHorizontal: 10, marginTop:40, marginBottom: 20}}>
+                                <Text style={{fontSize: 25, fontWeight:'900', textAlign: 'center'}}>Change Profile Picture ?</Text>
+                            </View>
+                            
+                            <View style={{marginVertical: 10, width: '100%', alignItems: 'center', justifyContent: 'center'}}>
+                                <TouchableOpacity style={styles.cameraBtn} onPress={() => this.gotoCam()}>
+                                    <Icon name='camera' color='white' size={30}/>
+                                    <Text style={styles.btnText}>From Camera</Text>
+                                </TouchableOpacity>
 
+                                <TouchableOpacity style={styles.imageBtn} onPress={() => this.gotoLibrary()}>
+                                    <Icon name='image' color='white' size={30}/>
+                                    <Text style={styles.btnText}>From Library</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </Modal>
@@ -243,8 +287,62 @@ const styles=StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 15
     },
+    changePicModalLayout:{
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor:"rgba(1,1,1,0.8)",
+        flex: 1
+    },
+    changePicLayout:{
+        flexDirection: "column",
+        paddingVertical: 15,
+        marginHorizontal: 5,
+        width: "75%",
+        justifyContent:"center",
+        alignItems: "center",
+        backgroundColor: "white",
+        borderRadius: 15
+    },
     footer:{
         height: "25%"
+    },
+    cameraBtn:{
+        backgroundColor: '#1C191C',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: "80%",
+        height: 50,
+        marginVertical: 5,
+        borderRadius: 25,
+        flexDirection: 'row'
+    },
+    imageBtn:{
+        backgroundColor: '#317AAD',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: "80%",
+        height: 50,
+        marginVertical: 5,
+        borderRadius: 25,
+        flexDirection: 'row'
+    },
+    closePicBtn:{
+        width: 30, 
+        height: 30, 
+        borderRadius: 30,
+        backgroundColor: '#D92222',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    closeBtnPosition:{
+        flex: 1,
+        alignItems: 'flex-end',
+        position: 'absolute',
+        top: 20,
+        bottom: 20,
+        right: 20,
+        left: 20,
+        elevation: 0,
     }
 })
 
